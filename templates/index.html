@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Restaurant Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root {
@@ -33,17 +34,16 @@
       padding: 0 16px;
     }
 
-    .dashboard {
+    .dashboard, .summary-cards {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 40px;
       gap: 30px;
       padding: 20px;
       max-width: 1000px;
     }
 
-    .card {
+    .card, .summary {
       background: var(--card-bg);
       border-radius: 16px;
       box-shadow: 0 4px 12px var(--shadow);
@@ -58,7 +58,6 @@
       justify-content: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       animation: popIn 0.5s ease forwards;
-      touch-action: manipulation;
     }
 
     .card:hover {
@@ -71,21 +70,32 @@
       margin-bottom: 10px;
     }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.8rem;
-      }
+    .summary h3 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: var(--text);
+    }
 
-      .dashboard {
+    .summary span {
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    canvas {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard, .summary-cards {
         flex-direction: column;
         align-items: center;
       }
 
-      .card {
+      .card, .summary {
         width: 85%;
         max-width: 350px;
-        height: 140px;
-        font-size: 1.1rem;
+        height: auto;
       }
 
       .emoji {
@@ -108,6 +118,7 @@
 <body>
   <h1>📋 Restaurant App Dashboard</h1>
 
+  <!-- App Links -->
   <div class="dashboard">
     <a href="https://your-billing-app.onrender.com" class="card" target="_blank">
       <div class="emoji">💳</div>
@@ -122,5 +133,51 @@
       <div>Inventory App</div>
     </a>
   </div>
+
+  <!-- Summary Panels -->
+  <div class="summary-cards">
+    <div class="summary">
+      <h3>23</h3>
+      <span>Total Inventory Items</span>
+    </div>
+    <div class="summary">
+      <h3>5</h3>
+      <span>Low Stock Items</span>
+    </div>
+    <div class="summary">
+      <h3>12</h3>
+      <span>Today's Reservations</span>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <canvas id="inventoryChart" width="600" height="300"></canvas>
+
+  <script>
+    const ctx = document.getElementById('inventoryChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Vegetables', 'Meat', 'Dairy', 'Drinks', 'Other'],
+        datasets: [{
+          label: 'Inventory by Category',
+          data: [8, 4, 5, 3, 3],
+          backgroundColor: '#007BFF',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
